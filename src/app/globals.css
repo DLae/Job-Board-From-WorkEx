@@ -95,6 +95,7 @@ table{
 td {
   border: 1px solid black;
   text-align: center;
+  font-size: larger;
 }
 
 td:nth-child(1){

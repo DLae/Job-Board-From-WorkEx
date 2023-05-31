@@ -42,7 +42,7 @@ function tableCreate2(responseData){
 
         var dataRow = <tr>
             <td>{jobItem.title}</td>
-            <td>{jobItem.summary.substring(0,1200)}</td>
+            <td>{jobItem.summary.substring(0,900) + "... Please scan the QR Code for more information"}</td>
             <td>{jobItem.company}</td>
             <td>{jobItem.location.location}</td>
             <td>{jobItem.link}</td>
