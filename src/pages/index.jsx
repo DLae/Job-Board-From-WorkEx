@@ -59,6 +59,7 @@ function tableCreate2(responseData){
 
     return (
         <table className={"jobCardTable"}>
+            <caption>This is all a work in progress by Josh Bhogal, I'm a T-level student so dont be too harsh lmao</caption>
             <tbody>
             <tr>
                 <th>Job Title</th>

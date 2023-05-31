@@ -96,6 +96,10 @@ th{
   font-size: xx-large;
 }
 
+caption{
+  font-size: 30px;
+}
+
 td {
   border: 1px solid black;
   text-align: center;
