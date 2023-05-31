@@ -1,4 +1,4 @@
-import "../styles/globals.css"
+import "../app/globals.css"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 
