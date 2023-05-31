@@ -92,6 +92,10 @@ table{
   padding: 25px 25px 25px 25px;
 }
 
+th{
+  font-size: xx-large;
+}
+
 td {
   border: 1px solid black;
   text-align: center;
