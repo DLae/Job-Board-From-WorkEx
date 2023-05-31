@@ -59,8 +59,8 @@ function tableCreate2(responseData){
             <tr>
                 <th>Job Title</th>
                 <th>Job Description</th>
-                <th>Job Pay</th>
-                <th>Job Hours</th>
+                <th>Company</th>
+                <th>Job Location</th>
                 <th>QR Code</th>
             </tr>
             {jobs}
