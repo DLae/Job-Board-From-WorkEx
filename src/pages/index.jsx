@@ -1,5 +1,4 @@
 import "../styles/globals.css"
-import "../styles/something.scss"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 
