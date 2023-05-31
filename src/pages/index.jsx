@@ -8,7 +8,7 @@ const MainPage = () => {
     useEffect(() => {
             const fetchData = async () => {
                 try {
-                    const response = await axios.get('http://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
+                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
                     setJobs(response.data);
                 } catch (error) {
                     console.error(error.message)
