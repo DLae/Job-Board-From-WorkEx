@@ -90,6 +90,7 @@ body {
 table{
   width: 100%;
   padding: 25px 25px 25px 25px;
+  font-family: Helvetica, sans-serif;
 }
 
 th{
