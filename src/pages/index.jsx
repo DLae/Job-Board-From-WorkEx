@@ -1,7 +1,7 @@
 import "../app/globals.css"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
-//import QRCode from "../pages/qrcode.min";
+import QRCode from "qrcode"
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
@@ -26,16 +26,18 @@ const MainPage = () => {
    return (tableCreate2(jobs))
 }
 
-// function generateQrCodeForLink(link) {
-//     var qrcode = new QRCode(document.getElementById('qrcode'), {
-//         text: link,
-//         width: 128,
-//         height: 128,
-//         colorDark: '#000000',
-//         colorLight: '#ffffff',
-//         correctLevel : QRCode.CorrectLevel.H
-//     });
-// }
+
+
+function generateCodeFromLink(link) {
+    var qrcode = new QRCode(document.getElementById('qrcode'), {
+        text: link,
+        width: 128,
+        height: 128,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel : QRCode.CorrectLevel.H
+    });
+}
 
 
 function tableCreate2(responseData){
@@ -65,7 +67,7 @@ function tableCreate2(responseData){
 
     return (
         <table className={"jobCardTable"}>
-            <caption>This is all a first design of a digital Job Board - Made by Josh Bhogal (Im a T-level student, Feedback is appreciated)</caption>
+            <caption>This is all a first design of a digital Job Board - Made by Josh Bhogal (I'm a T-level student, Feedback is appreciated)</caption>
             <tbody>
             <tr>
                 <th>Job Title</th>

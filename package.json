@@ -12,15 +12,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@types/styled-components": "^5.1.26",
     "axios": "^1.4.0",
     "govuk-frontend": "^4.6.0",
     "govuk-react": "^0.10.5",
     "next": "13.4.3",
+    "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-do": "^1.1.6",
     "react-dom": "18.2.0",
     "sass": "^1.62.1",
+    "save": "^2.9.0",
     "styled-components": "^5.3.11"
   }
 }
