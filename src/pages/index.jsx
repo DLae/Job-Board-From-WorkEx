@@ -1,7 +1,7 @@
 import "../app/globals.css"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
-import QRCode from "../pages/qrcode.min";
+//import QRCode from "../pages/qrcode.min";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
