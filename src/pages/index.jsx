@@ -48,10 +48,10 @@ const MainPage = () => {
         }
 
     , []);
-    // setTimeout(function (){
-    //     location.reload()
-    //     return ("hello world")
-    // }, 600000)
+    setTimeout(function (){
+        location.reload()
+        return ("hello world")
+    }, 600000)
    return (tableCreate2(jobs))
 }
 
