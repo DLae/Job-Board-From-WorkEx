@@ -2,7 +2,6 @@ import "../app/globals.css"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
-import {error} from "next/dist/build/output/log";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
@@ -12,31 +11,15 @@ const MainPage = () => {
     useEffect(() => {
             const fetchData = async () => {
                 try {
-                    // const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
-                    // setJobs(response.data.map( job =>
-                    // {QRCode.toDataURL("google.com").then(qrPng => {
-                    //     return({
-                    //         ...job,
-                    //         qrCode: "qrPng"})
-                    // })
-                    //     }))
-
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
-
+                    const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
-                        const qrPng = await QRCode.toDataURL(job.link);
+                        const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
                         return {
                             ...job,
                             qrCode: qrPng
                         };
                     }));
-
-                    // const updatedJobs = jobs.map(job => {
-                    //     return{
-                    //         ...job,
-                    //         qrCode: qrcode
-                    //     }
-                    // })
                     setJobs(jobsWithQrCodes)
 
                 } catch (error) {
@@ -74,15 +57,13 @@ function tableCreate2(responseData){
 
         const dataRow = <tr>
             <td>{jobItem.title}</td>
-            <td>{jobItem.summary.substring(0, 900) + "... Please scan the QR Code for more information"}</td>
+            <td>{jobItem.summary.substring(0, 750) + "... Please scan the QR Code for more information"}</td>
             <td>{jobItem.company}</td>
             <td>{jobItem.location.location}</td>
             <td className={"qrcode"}><img src = {jobItem.qrCode}/></td>
         </tr>;
         jobs.push(dataRow)
     }
-
-
 
     return (
         <table className={"jobCardTable"}>
@@ -100,18 +81,5 @@ function tableCreate2(responseData){
         </table>
     )
 }
-
-// function show_image(src, width, height, alt) {
-//     if (typeof window !== "undefined") {
-//         const img = document.createElement("img");
-//         img.src = src;
-//         img.width = width;
-//         img.height = height;
-//         img.alt = alt;
-//
-//         // This next line will just add it to the <body> tag
-//         document.body.appendChild(img);
-//     }
-// }
 
 export default MainPage
