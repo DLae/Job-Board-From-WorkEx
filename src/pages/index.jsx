@@ -2,46 +2,66 @@ import "../app/globals.css"
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
+import {error} from "next/dist/build/output/log";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
 
+    const [qrcode, setQrcode] = useState(null)
+
     useEffect(() => {
             const fetchData = async () => {
                 try {
+                    // const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
+                    // setJobs(response.data.map( job =>
+                    // {QRCode.toDataURL("google.com").then(qrPng => {
+                    //     return({
+                    //         ...job,
+                    //         qrCode: "qrPng"})
+                    // })
+                    //     }))
+
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
-                    setJobs(response.data);
+
+                    const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
+                        const qrPng = await QRCode.toDataURL(job.link);
+                        return {
+                            ...job,
+                            qrCode: qrPng
+                        };
+                    }));
+
+                    // const updatedJobs = jobs.map(job => {
+                    //     return{
+                    //         ...job,
+                    //         qrCode: qrcode
+                    //     }
+                    // })
+                    setJobs(jobsWithQrCodes)
+
                 } catch (error) {
                     console.error(error.message)
                 }
             }
             fetchData();
+
         }
 
     , []);
-    setTimeout(function (){
-        location.reload()
-        return (tableCreate2(jobs))
-    }, 600000)
+    // setTimeout(function (){
+    //     location.reload()
+    //     return ("hello world")
+    // }, 600000)
    return (tableCreate2(jobs))
 }
 
 
 
-function generateCodeFromLink(link) {
-    var qrcode = new QRCode(document.getElementById('qrcode'), {
-        text: link,
-        width: 128,
-        height: 128,
-        colorDark: '#000000',
-        colorLight: '#ffffff',
-        correctLevel : QRCode.CorrectLevel.H
-    });
-}
+
 
 
 function tableCreate2(responseData){
-    
+    let err;
     console.log(responseData)
     const jobs = [];
     if (responseData === null){
@@ -57,10 +77,9 @@ function tableCreate2(responseData){
             <td>{jobItem.summary.substring(0, 900) + "... Please scan the QR Code for more information"}</td>
             <td>{jobItem.company}</td>
             <td>{jobItem.location.location}</td>
-            <td className={"qrcode"}>{jobItem.link}</td>
+            <td className={"qrcode"}><img src = {jobItem.qrCode}/></td>
         </tr>;
         jobs.push(dataRow)
-        console.log(dataRow)
     }
 
 
