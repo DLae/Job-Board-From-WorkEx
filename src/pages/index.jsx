@@ -6,13 +6,11 @@ import QRCode from "qrcode"
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
 
-    const [qrcode, setQrcode] = useState(null)
-
     useEffect(() => {
             const fetchData = async () => {
                 try {
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
-                    const qrCodeSize = 180;
+                    const qrCodeSize = 190;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
                         const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
                         return {
@@ -33,18 +31,26 @@ const MainPage = () => {
     , []);
     setTimeout(function (){
         location.reload()
-        return ("hello world")
+        return (tableCreate2(jobs))
     }, 600000)
    return (tableCreate2(jobs))
 }
 
-
-
-
+function pageScrollDown() {
+    if (typeof window !== "undefined") {
+        window.scrollBy(0, 1);
+        setTimeout(pageScrollDown, 10);
+    }
+}
+function pageScrollUp() {
+    if (typeof window !== "undefined") {
+        window.scrollBy(0, -1);
+        setTimeout(pageScrollUp, 10);
+    }
+}
 
 
 function tableCreate2(responseData){
-    let err;
     console.log(responseData)
     const jobs = [];
     if (responseData === null){
@@ -57,7 +63,7 @@ function tableCreate2(responseData){
 
         const dataRow = <tr>
             <td>{jobItem.title}</td>
-            <td>{jobItem.summary.substring(0, 750) + "... Please scan the QR Code for more information"}</td>
+            <td>{jobItem.summary.substring(0,300) + "... Please scan the QR Code for more information"}</td>
             <td>{jobItem.company}</td>
             <td>{jobItem.location.location}</td>
             <td className={"qrcode"}><img src = {jobItem.qrCode}/></td>
@@ -79,6 +85,7 @@ function tableCreate2(responseData){
             {jobs}
             </tbody>
         </table>
+
     )
 }
 

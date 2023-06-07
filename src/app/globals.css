@@ -116,10 +116,13 @@ td:nth-child(3){
 td:nth-child(4){
   width: 10%
 }
+td:nth-child(5){
+  width: 10%
+}
 
 
 td:nth-child(2){
-  width: 50%;
+  width: 30%;
 }
 
 body {
