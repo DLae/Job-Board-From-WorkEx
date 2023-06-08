@@ -75,7 +75,10 @@ function getWindowSize(){
 //console.log(window.innerHeight, window.innerWidth)
 function tableCreate2(responseData){
 
-    const size = getWindowSize()
+    let size = getWindowSize()
+    if (size === 0){
+        size = 4
+    }
 
     const jobs = [];
     if (responseData === null){
