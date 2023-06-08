@@ -65,6 +65,8 @@ function getWindowSize(){
                 break;
             case 1080 : return 5;   // 1080 x ~~~~
                 break;
+            default: return 4;
+                break;
         }
     }
 }
@@ -76,9 +78,6 @@ function getWindowSize(){
 function tableCreate2(responseData){
 
     let size = getWindowSize()
-    if (size === 0){
-        size = 4
-    }
 
     const jobs = [];
     if (responseData === null){
