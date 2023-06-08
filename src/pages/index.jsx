@@ -1,4 +1,5 @@
 import "../app/globals.css"
+import Table from '@govuk-react/table';
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
@@ -50,16 +51,39 @@ function pageScrollUp() {
 }
 
 
+function getWindowSize(){
+    if (typeof window !== "undefined"){
+        const windowWidth = window.innerWidth
+        const windowHeight = window.innerHeight
+
+        switch (windowWidth){
+            case 2560 : return 6;   // 2560 x ~~~~
+                break;
+            case 1920 : return 4;   // 1920 x ~~~~
+                break;
+            case 1440 : return 11;  // 1440 x ~~~~
+                break;
+            case 1080 : return 5;   // 1080 x ~~~~
+                break;
+        }
+    }
+}
+
+// Height, Width
+// 1329, 2560 ----- 969, 1920   landscape
+// 2449, 1440 ----- 1809, 1080  portrait
+//console.log(window.innerHeight, window.innerWidth)
 function tableCreate2(responseData){
-    console.log(responseData)
+
+    const size = getWindowSize()
+
     const jobs = [];
     if (responseData === null){
         return "";
     }
-    for (let i = 0; i < 6; i++){
+    for (let i = 0; i < size; i++){
 
         let jobItem = responseData[i];
-
 
         const dataRow = <tr>
             <td>{jobItem.title}</td>
@@ -85,6 +109,20 @@ function tableCreate2(responseData){
             {jobs}
             </tbody>
         </table>
+
+        // <Table className={"jobCardTable"}>
+        //     <caption>This is all a first design of a digital Job Board - Made by Josh Bhogal (I'm a T-level student, Feedback is appreciated)</caption>
+        //     <tbody>
+        //     <tr>
+        //         <th>Job Title</th>
+        //         <th>Job Description</th>
+        //         <th>Company</th>
+        //         <th>Job Location</th>
+        //         <th>QR Code</th>
+        //     </tr>
+        //     {jobs}
+        //     </tbody>
+        // </Table>
 
     )
 }
