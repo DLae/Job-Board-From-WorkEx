@@ -85,9 +85,6 @@ body {
   overflow-x: hidden;
 }
 
-
-
-
 Table.Cell:nth-child(1){
   width: 10%;
 }

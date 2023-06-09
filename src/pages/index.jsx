@@ -112,10 +112,10 @@ function tableCreate2(responseData){
 
             <Table.Row>
                 <Table.Cell>
-                    <p className="govuk-body">{jobItem.title}</p>
+                    <strong className="govuk-body">{jobItem.title}</strong>
                 </Table.Cell>
                 <Table.Cell>
-                    <p className="govuk-body">{jobItem.summary.substring(0,300) + "... Scan the QR Code for more information"}</p>
+                    <p className="govuk-body">{jobItem.summary.substring(0,500) + "... Scan the QR Code for more information"}</p>
                 </Table.Cell>
                 <Table.Cell>
                     <p className="govuk-body">{jobItem.company}</p>
@@ -182,9 +182,9 @@ function tableCreate2(responseData){
                     </div>
                 </div>
             </header>
-            <div className="govuk-width-container ">
-                <main className="govuk-main-wrapper " id="main-content" role="main">
-                    <Table className={"jobCardTable"} caption={"This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)"}>
+            <div className="govuk-width-container" className={"govuk-!-padding-left-5"}>
+                <main className="govuk-main-wrapper " id="main-content" role="main" className={"govuk-!-padding-right-3"}>
+                    <Table className={"govuk-!-padding-0"} caption={"This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)"}>
                         {jobs}
                     </Table>
                 </main>
