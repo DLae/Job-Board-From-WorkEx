@@ -89,21 +89,17 @@ Table.Cell:nth-child(1){
   width: 10%;
 }
 
-th{
-  font-size: xx-large;
-}
 
 caption{
   font-size: 30px;
 }
 
 td {
-  border: 1px solid black;
   text-align: center;
   font-size: 22px
 }
 
-td:nth-child(1){
+th:nth-child(1){
   width: 10%
 }
 td:nth-child(3){
@@ -115,7 +111,6 @@ td:nth-child(4){
 td:nth-child(5){
   width: 10%
 }
-
 
 td:nth-child(2){
   width: 30%;
