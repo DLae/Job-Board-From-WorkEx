@@ -85,12 +85,14 @@ body {
   overflow-x: hidden;
 }
 
-
-
 table{
   width: 100%;
   padding: 25px 25px 25px 25px;
   font-family: Helvetica, sans-serif;
+}
+
+Table.Cell:nth-child(1){
+  width: 10%;
 }
 
 th{
