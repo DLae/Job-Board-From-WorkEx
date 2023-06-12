@@ -18,6 +18,8 @@ const MainPage = () => {
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&type=city&apiKey=3200759bbd644f979309769b8cd6cc8e");
                         console.log(locationInfo);
+                        const cityLocation = locationInfo.data;
+                        console.log(cityLocation)
                         return locationInfo;
                     })
                 }
