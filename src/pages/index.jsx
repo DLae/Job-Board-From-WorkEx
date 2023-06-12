@@ -16,11 +16,9 @@ const MainPage = () => {
             const fetchLocationData = async () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
-                        const placeholder = await Promise.all(locationInfo.data)
-                        const cityLocation = placeholder.features.properties.city;
-                        console.log(cityLocation);
-                        return cityLocation;
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&type=city&apiKey=3200759bbd644f979309769b8cd6cc8e");
+                        console.log(locationInfo);
+                        return locationInfo;
                     })
                 }
                 catch (error){
@@ -46,7 +44,7 @@ const MainPage = () => {
                     console.error(error.message)
                 }
             }
-            //jobCentreLocation = fetchLocationData();
+            jobCentreLocation = fetchLocationData();
             jobCentreLocation = "Leeds"
             fetchData();
 
