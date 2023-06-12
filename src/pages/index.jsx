@@ -12,14 +12,14 @@ const MainPage = () => {
     const [jobs, setJobs] = useState(null)
 
     useEffect(() => {
-            // navigator.geolocation.getCurrentPosition(function(location) {
-            //     console.log(location.coords.latitude);
-            //     console.log(location.coords.longitude);
-            //
-            //     const locationData = axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+ location.coords.latitude + "," + location.coords.longitude)
-            //     console.log(locationData)
-            //
-            // });
+            navigator.geolocation.getCurrentPosition(function(location) {
+                console.log(location.coords.latitude);
+                console.log(location.coords.longitude);
+
+                const locationData = axios.get("https://api.geoapify.com/v1/geocode/reverse?lat="+location.coords.latitude+"&lon="+location.coords.longitude+"&apiKey=3200759bbd644f979309769b8cd6cc8e")
+                console.log(locationData)
+
+            });
 
             const fetchData = async () => {
                 try {
