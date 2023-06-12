@@ -90,11 +90,6 @@ caption{
   font-size: 30px;
 }
 
-td{
-  text-align: center;
-  font-size: 22px
-}
-
 th:nth-child(1){
   width: 10%
 }

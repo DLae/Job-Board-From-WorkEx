@@ -11,6 +11,10 @@ const MainPage = () => {
     const [jobs, setJobs] = useState(null)
 
     useEffect(() => {
+            navigator.geolocation.getCurrentPosition(function(location) {
+                console.log(location.coords.latitude);
+                console.log(location.coords.longitude);
+            });
             const fetchData = async () => {
                 try {
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
@@ -58,8 +62,6 @@ function getWindowSize(){
     if (typeof window !== "undefined"){
         const windowWidth = window.innerWidth
         const windowHeight = window.innerHeight
-        console.log(windowWidth)
-        console.log(windowHeight)
         // 1633 x 910 comfortably fits 4 jobs no problem
         switch (windowWidth){
             case 2560 : return 5;   // 2560 x ~~~~
@@ -108,19 +110,19 @@ function tableCreate2(responseData){
         // </GridRow>;
         // jobs.push(dataRow)
 
-        const dataRow = <Table className={"govuk-table"}>
+        const dataRow = <Table className={"govuk-table"} >
 
             <Table.Row>
-                <Table.CellHeader>
+                <Table.CellHeader className={"govuk-!-text-align-centre"}>
                     {jobItem.title}
                 </Table.CellHeader>
-                <Table.Cell>
+                <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.summary.substring(0,350) + "... Scan the QR Code for more information"}</p>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.company}</p>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.location.location}</p>
                 </Table.Cell>
                 <Table.Cell>
@@ -171,7 +173,10 @@ function tableCreate2(responseData){
                     </div>
                 </div>
             </header>
-            <div className="govuk-width-container" className={"govuk-!-padding-left-9"}>
+
+
+
+            <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
                 <main className="govuk-main-wrapper " id="main-content" role="main">
                     <table className={"govuk-table"}>
                         <caption>This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)</caption>
