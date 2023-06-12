@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
 import {GridCol, GridRow} from "govuk-react";
+import {addImplicitTags} from "next/dist/server/lib/patch-fetch";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
@@ -14,7 +15,12 @@ const MainPage = () => {
             navigator.geolocation.getCurrentPosition(function(location) {
                 console.log(location.coords.latitude);
                 console.log(location.coords.longitude);
+
+                const locationData = axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+ location.coords.latitude + "," + location.coords.longitude)
+                console.log(locationData)
+
             });
+
             const fetchData = async () => {
                 try {
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
