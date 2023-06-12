@@ -10,20 +10,28 @@ import {addImplicitTags} from "next/dist/server/lib/patch-fetch";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
-
+    let jobCentreLocation;
     useEffect(() => {
-            navigator.geolocation.getCurrentPosition(function(location) {
-                console.log(location.coords.latitude);
-                console.log(location.coords.longitude);
 
-                const locationData = axios.get("https://api.geoapify.com/v1/geocode/reverse?lat="+location.coords.latitude+"&lon="+location.coords.longitude+"&apiKey=3200759bbd644f979309769b8cd6cc8e")
-                console.log(locationData)
+            const fetchLocationData = async () => {
+                try {
+                    navigator.geolocation.getCurrentPosition(async function (location) {
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
+                        const placeholder = await Promise.all(locationInfo.data)
+                        const cityLocation = placeholder.features.properties.city;
+                        console.log(cityLocation);
+                        return cityLocation;
+                    })
+                }
+                catch (error){
+                    console.error(error.message)
+                }
+            }
 
-            });
 
             const fetchData = async () => {
                 try {
-                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=%25*');
+                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+jobCentreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
                         const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
@@ -38,6 +46,8 @@ const MainPage = () => {
                     console.error(error.message)
                 }
             }
+            //jobCentreLocation = fetchLocationData();
+            jobCentreLocation = "Leeds"
             fetchData();
 
         }
