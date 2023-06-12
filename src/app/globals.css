@@ -116,6 +116,10 @@ td:nth-child(2){
   width: 30%;
 }
 
+caption{
+  font-size: x-large;
+}
+
 body {
 }
 

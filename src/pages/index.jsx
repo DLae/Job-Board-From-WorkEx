@@ -66,7 +66,7 @@ function getWindowSize(){
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 9;  // 1440 x ~~~~
             case 1080 : return 5;   // 1080 x ~~~~
-            default: return 3;
+            default: return 4;
         }
     }
 }
@@ -115,7 +115,7 @@ function tableCreate2(responseData){
                     {jobItem.title}
                 </Table.CellHeader>
                 <Table.Cell>
-                    <p className="govuk-body">{jobItem.summary.substring(0,500) + "... Scan the QR Code for more information"}</p>
+                    <p className="govuk-body">{jobItem.summary.substring(0,350) + "... Scan the QR Code for more information"}</p>
                 </Table.Cell>
                 <Table.Cell>
                     <p className="govuk-body">{jobItem.company}</p>
@@ -171,9 +171,10 @@ function tableCreate2(responseData){
                     </div>
                 </div>
             </header>
-            <div className="govuk-width-container" className={"govuk-!-padding-left-1"}>
-                <main className="govuk-main-wrapper " id="main-content" role="main" className={"govuk-!-padding-right-3"}>
-                    <table className={"govuk-table"} caption={"This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)"}>
+            <div className="govuk-width-container" className={"govuk-!-padding-left-9"}>
+                <main className="govuk-main-wrapper " id="main-content" role="main">
+                    <table className={"govuk-table"}>
+                        <caption>This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)</caption>
                         {jobs}
                     </table>
                 </main>
