@@ -29,10 +29,10 @@ const MainPage = () => {
             }
 
 
-            const fetchData = async () => {
+            const fetchData = async (centreLocation) => {
                 try {
 
-                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+jobCentreLocation+'&keywords=%25*');
+                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
                         const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
@@ -52,7 +52,7 @@ const MainPage = () => {
             if (typeof jobCentreLocation !== "string"){
                 jobCentreLocation = "London"
             }
-            fetchData();
+            fetchData(jobCentreLocation);
         }
 
     , []);
