@@ -46,7 +46,7 @@ const MainPage = () => {
                     console.error(error.message)
                 }
             }
-            //jobCentreLocation = fetchLocationData();
+            jobCentreLocation = fetchLocationData();
             jobCentreLocation = "Leeds"
             fetchData();
 
