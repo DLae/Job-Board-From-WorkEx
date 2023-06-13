@@ -17,9 +17,9 @@ const MainPage = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&type=city&apiKey=3200759bbd644f979309769b8cd6cc8e");
-                        console.log(locationInfo);
+                        //console.log(locationInfo);
                         jobCentreLocation = locationInfo.data.features[0].properties.city;
-                        console.log(jobCentreLocation)
+                        //console.log(jobCentreLocation)
                         return jobCentreLocation;
                     })
                 }
@@ -31,7 +31,7 @@ const MainPage = () => {
 
             const fetchData = async (centreLocation) => {
                 try {
-
+                    console.log(centreLocation)
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
@@ -47,10 +47,12 @@ const MainPage = () => {
                     console.error(error.message)
                 }
             }
+
+
             fetchLocationData();
-            console.log(jobCentreLocation)
+            //console.log(jobCentreLocation)
             if (typeof jobCentreLocation !== "string"){
-                jobCentreLocation = "London"
+                jobCentreLocation = "london"
             }
             fetchData(jobCentreLocation);
         }
