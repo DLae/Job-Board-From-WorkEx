@@ -15,6 +15,7 @@ const MainPage = () => {
     useEffect(() => {
             const fetchLocationData = () => {
                 try {
+                    debugger
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
                         //console.log(locationInfo);
@@ -34,6 +35,7 @@ const MainPage = () => {
 
             const fetchData = async (centreLocation) => {
                 try {
+                    debugger
                     //console.log(centreLocation)
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
@@ -82,6 +84,7 @@ function pageScrollUp() {
 
 
 function getWindowSize(){
+    debugger
     if (typeof window !== "undefined"){
         const windowWidth = window.innerWidth
         const windowHeight = window.innerHeight
@@ -132,6 +135,8 @@ function tableCreate2(responseData){
         //     <GridCol><img src = {jobItem.qrCode}/></GridCol>
         // </GridRow>;
         // jobs.push(dataRow)
+
+        debugger
 
         const dataRow = <Table className={"govuk-table"} >
 
