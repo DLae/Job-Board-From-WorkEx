@@ -11,14 +11,16 @@ import {addImplicitTags} from "next/dist/server/lib/patch-fetch";
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
     let jobCentreLocation;
+
     useEffect(() => {
-            const fetchLocationData = async () => {
+            const fetchLocationData = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
                         console.log(locationInfo);
                         jobCentreLocation = locationInfo.data.features[0].properties.city;
                         //console.log(jobCentreLocation)
+                        fetchData(jobCentreLocation);
                         return jobCentreLocation;
                     })
                 }
@@ -53,7 +55,6 @@ const MainPage = () => {
             if (typeof jobCentreLocation == "undefined"){
                 jobCentreLocation = "london"
             }
-            fetchData(jobCentreLocation);
         }
 
     , []);
