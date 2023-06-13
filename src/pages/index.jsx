@@ -48,7 +48,9 @@ const MainPage = () => {
                 }
             }
             jobCentreLocation = fetchLocationData();
-            if (typeof jobCentreLocation === "object"){
+            console.log(jobCentreLocation)
+            console.log(typeof jobCentreLocation)
+            if (typeof jobCentreLocation !== "string"){
                 jobCentreLocation = "London"
             }
             fetchData();
