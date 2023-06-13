@@ -13,31 +13,31 @@ const MainPage = () => {
     //let jobCentreLocation;
 
     useEffect(() => {
-            const fetchLocationData = () => {
-                try {
-                    debugger
-                    navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
-                        //console.log(locationInfo);
-                        let jobCentreLocation = locationInfo.data.features[0].properties.city;
-                        //console.log(jobCentreLocation)
-                        fetchData(jobCentreLocation);
-                    }, async function (){
-                        fetchData("London")
-                        //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
-                    })
-                }
-                catch (error){
-                    console.error(error.message)
-                }
-            }
+            // const fetchLocationData = () => {
+            //     try {
+            //         debugger
+            //         navigator.geolocation.getCurrentPosition(async function (location) {
+            //             const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
+            //             //console.log(locationInfo);
+            //             let jobCentreLocation = locationInfo.data.features[0].properties.city;
+            //             //console.log(jobCentreLocation)
+            //             fetchData(jobCentreLocation);
+            //         }, async function (){
+            //             fetchData("London")
+            //             //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
+            //         })
+            //     }
+            //     catch (error){
+            //         console.error(error.message)
+            //     }
+            // }
 
 
-            const fetchData = async (centreLocation) => {
+            const fetchData = async () => {
                 try {
                     debugger
                     //console.log(centreLocation)
-                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
+                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=London&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
                         const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
@@ -54,7 +54,7 @@ const MainPage = () => {
             }
 
 
-            fetchLocationData();
+            fetchData();
             // console.log(jobCentreLocation)
             // if (typeof jobCentreLocation == "undefined"){
             //     jobCentreLocation = "london"
