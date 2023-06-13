@@ -10,18 +10,20 @@ import {addImplicitTags} from "next/dist/server/lib/patch-fetch";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
-    let jobCentreLocation;
+    //let jobCentreLocation;
 
     useEffect(() => {
             const fetchLocationData = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
-                        console.log(locationInfo);
-                        jobCentreLocation = locationInfo.data.features[0].properties.city;
+                        //console.log(locationInfo);
+                        let jobCentreLocation = locationInfo.data.features[0].properties.city;
                         //console.log(jobCentreLocation)
                         fetchData(jobCentreLocation);
-                        return jobCentreLocation;
+                    }, async function (){
+                        fetchData("London")
+                        //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
                     })
                 }
                 catch (error){
@@ -32,7 +34,7 @@ const MainPage = () => {
 
             const fetchData = async (centreLocation) => {
                 try {
-                    console.log(centreLocation)
+                    //console.log(centreLocation)
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
@@ -51,10 +53,10 @@ const MainPage = () => {
 
 
             fetchLocationData();
-            console.log(typeof jobCentreLocation)
-            if (typeof jobCentreLocation == "undefined"){
-                jobCentreLocation = "london"
-            }
+            // console.log(jobCentreLocation)
+            // if (typeof jobCentreLocation == "undefined"){
+            //     jobCentreLocation = "london"
+            // }
         }
 
     , []);
