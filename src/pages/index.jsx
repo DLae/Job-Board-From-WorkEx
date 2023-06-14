@@ -1,43 +1,20 @@
 import "../app/globals.css"
 import "../app/gov.scss"
 import Table from '@govuk-react/table';
-import Button from '@govuk-react/button';
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
-import {GridCol, GridRow} from "govuk-react";
-import {addImplicitTags} from "next/dist/server/lib/patch-fetch";
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
-    //let jobCentreLocation;
 
     useEffect(() => {
-            // const fetchLocationData = () => {
-            //     try {
-            //         debugger
-            //         navigator.geolocation.getCurrentPosition(async function (location) {
-            //             const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
-            //             //console.log(locationInfo);
-            //             let jobCentreLocation = locationInfo.data.features[0].properties.city;
-            //             //console.log(jobCentreLocation)
-            //             fetchData(jobCentreLocation);
-            //         }, async function (){
-            //             fetchData("London")
-            //             //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
-            //         })
-            //     }
-            //     catch (error){
-            //         console.error(error.message)
-            //     }
-            // }
 
-
-            const fetchData = async () => {
+            const fetchData = async (centreLocation) => {
                 try {
-                    debugger
-                    //console.log(centreLocation)
-                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=London&keywords=%25*');
+
+
+                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
                         const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
@@ -53,12 +30,26 @@ const MainPage = () => {
                 }
             }
 
+            const fetchLocationData = () => {
+                try {
+                    navigator.geolocation.getCurrentPosition(async function (location) {
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
 
-            fetchData();
-            // console.log(jobCentreLocation)
-            // if (typeof jobCentreLocation == "undefined"){
-            //     jobCentreLocation = "london"
-            // }
+                        let jobCentreLocation = locationInfo.data.features[0].properties.city;
+
+                        await fetchData(jobCentreLocation);
+                    }, async function (){
+                        await fetchData("London")
+                        //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
+                    })
+                }
+                catch (error){
+                    console.error(error.message)
+                }
+            }
+
+            fetchLocationData();
+
         }
 
     , []);
@@ -69,22 +60,22 @@ const MainPage = () => {
    return (tableCreate2(jobs))
 }
 
-function pageScrollDown() {
-    if (typeof window !== "undefined") {
-        window.scrollBy(0, 1);
-        setTimeout(pageScrollDown, 10);
-    }
-}
-function pageScrollUp() {
-    if (typeof window !== "undefined") {
-        window.scrollBy(0, -1);
-        setTimeout(pageScrollUp, 10);
-    }
-}
+// function pageScrollDown() {
+//     if (typeof window !== "undefined") {
+//         window.scrollBy(0, 1);
+//         setTimeout(pageScrollDown, 10);
+//     }
+// }
+// function pageScrollUp() {
+//     if (typeof window !== "undefined") {
+//         window.scrollBy(0, -1);
+//         setTimeout(pageScrollUp, 10);
+//     }
+// }
 
 
 function getWindowSize(){
-    debugger
+
     if (typeof window !== "undefined"){
         const windowWidth = window.innerWidth
         const windowHeight = window.innerHeight
@@ -99,12 +90,6 @@ function getWindowSize(){
     }
 }
 
-// Height(normal/fullscreen), Width
-// 1304/1329, 2560 ----- 969, 1920   landscape
-// 2449, 1440 ----- 1809, 1080  portrait
-//console.log(window.innerHeight, window.innerWidth)
-
-// anything above 2000px wide comfortably fits 6 jobs (needs 1300px min height)
 function tableCreate2(responseData){
 
     let size = getWindowSize()
@@ -117,26 +102,6 @@ function tableCreate2(responseData){
     for (let i = 0; i < size; i++){
 
         let jobItem = responseData[i];
-
-        // const dataRow = <tr>
-        //     <td>{jobItem.title}</td>
-        //     <td>{jobItem.summary.substring(0,300) + "... Please scan the QR Code for more information"}</td>
-        //     <td>{jobItem.company}</td>
-        //     <td>{jobItem.location.location}</td>
-        //     <td><img src = {jobItem.qrCode}/></td>
-        // </tr>;
-        // jobs.push(dataRow)
-
-        // const dataRow = <GridRow>
-        //     <GridCol setWidth={"10%"}>{jobItem.title}</GridCol>
-        //     <GridCol setWidth={"50%"}>{jobItem.summary.substring(0,300) + "... Please scan the QR Code for more information"}</GridCol>
-        //     <GridCol setWidth={"10%"}>{jobItem.company}</GridCol>
-        //     <GridCol setWidth={"10%"}>{jobItem.location.location}</GridCol>
-        //     <GridCol><img src = {jobItem.qrCode}/></GridCol>
-        // </GridRow>;
-        // jobs.push(dataRow)
-
-        debugger
 
         const dataRow = <Table className={"govuk-table"} >
 
@@ -167,19 +132,6 @@ function tableCreate2(responseData){
 
 
     return (
-        // <table className={"jobCardTable"}>
-        //     <caption>This is all a first design of a digital Job Board - Made by Josh Bhogal (I'm a T-level student, Feedback is appreciated)</caption>
-        //     <tbody>
-        //     <tr>
-        //         <th>Job Title</th>
-        //         <th>Job Description</th>
-        //         <th>Company</th>
-        //         <th>Job Location</th>
-        //         <th>QR Code</th>
-        //     </tr>
-        //     {jobs}
-        //     </tbody>
-        // </table>
 
         <body className="govuk-template__body ">
             <script>
@@ -214,10 +166,6 @@ function tableCreate2(responseData){
             </div>
         </body>
 
-
-        // <button className="govuk-button" data-module="govuk-button">
-        //     Save and continue
-        // </button>
 
     )
 }
