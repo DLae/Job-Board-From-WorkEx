@@ -7,6 +7,7 @@ import QRCode from "qrcode"
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
+    const [shortendUrl, setShortenedUrl] = useState(null)
 
     useEffect(() => {
 
@@ -16,8 +17,12 @@ const MainPage = () => {
 
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
+
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
-                        const qrPng = await QRCode.toDataURL(job.link, {width:qrCodeSize});
+
+                        const newJobLink = "uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
+
+                        const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
                         return {
                             ...job,
                             qrCode: qrPng
@@ -41,7 +46,6 @@ const MainPage = () => {
                         const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey=8a79dd396285413c983d6b17f935f176");
                         let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
                         await fetchData(defaultPostcode)
-                        //const locationInfo =  await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.798285749680836&lon=-1.540316199229686&apiKey=3200759bbd644f979309769b8cd6cc8e")
                     })
                 }
                 catch (error){
