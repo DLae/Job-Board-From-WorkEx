@@ -8,7 +8,7 @@ const redirectpage = () =>{
         const indexOfEquals = window.location.search.indexOf("=")
         const searchQuery = window.location.search.substring(indexOfEquals + 1, window.location.search.length)
 
-        newPageOpen = window.open(searchQuery)
+        newPageOpen = window.open(searchQuery, "_blank")
     }
 
     return(newPageOpen)
