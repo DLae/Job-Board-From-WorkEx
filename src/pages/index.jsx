@@ -21,7 +21,6 @@ const MainPage = () => {
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
 
                         const newJobLink = "uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
-                        console.log(job.link)
                         const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
                         return {
                             ...job,

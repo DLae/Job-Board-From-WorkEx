@@ -1,13 +1,14 @@
 import "../app/globals.css";
 import "../app/gov.scss";
-import * as querystring from "querystring";
 
 const redirectpage = () =>{
-    const urlParams = new URLSearchParams(querystring)
-    const redirectLink = urlParams.get("redirecturl")
     let newPageOpen;
     if (typeof window !== "undefined") {
-        newPageOpen = window.open(redirectLink, "_blank")
+
+        const indexOfEquals = window.location.search.indexOf("=")
+        const searchQuery = window.location.search.substring(indexOfEquals + 1, window.location.search.length)
+
+        newPageOpen = window.open(searchQuery)
     }
 
     return(newPageOpen)
