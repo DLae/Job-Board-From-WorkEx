@@ -4,6 +4,7 @@ import Table from '@govuk-react/table';
 import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
+import dotenv from 'dotenv'
 
 const MainPage = () => {
     const [jobs, setJobs] = useState(null)
@@ -11,6 +12,10 @@ const MainPage = () => {
 
     useEffect(() => {
 
+        const userLocation = process.env.userLocationKey
+        const defaultLocation = process.env.defaultLocationKey
+        console.log(userLocation)
+        console.log(defaultLocation)
             const fetchData = async (centreLocation) => {
                 try {
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
@@ -35,12 +40,12 @@ const MainPage = () => {
             const fetchLocationData = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey="+ userLocation);
                         let jobCentreLocation = locationInfo.data.features[0].properties.postcode;
                         await fetchData(jobCentreLocation);
 
                     }, async function (){
-                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey=8a79dd396285413c983d6b17f935f176");
+                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey="+ defaultLocation);
                         let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
                         await fetchData(defaultPostcode)
                     })
