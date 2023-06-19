@@ -13,14 +13,12 @@ const MainPage = () => {
 
             const fetchData = async (centreLocation) => {
                 try {
-
-
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
 
                     const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
 
-                        const newJobLink = "uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
+                        const newJobLink = "https://uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
                         const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
                         return {
                             ...job,
