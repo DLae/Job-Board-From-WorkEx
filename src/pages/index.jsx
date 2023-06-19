@@ -40,12 +40,12 @@ const MainPage = () => {
             const fetchLocationData = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey="+ userLocation);
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
                         let jobCentreLocation = locationInfo.data.features[0].properties.postcode;
                         await fetchData(jobCentreLocation);
 
                     }, async function (){
-                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey="+ defaultLocation);
+                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey=8a79dd396285413c983d6b17f935f176");
                         let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
                         await fetchData(defaultPostcode)
                     })
