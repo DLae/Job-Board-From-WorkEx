@@ -65,20 +65,6 @@ const MainPage = (props) => {
    return (tableCreate2(jobs))
 }
 
-// function pageScrollDown() {
-//     if (typeof window !== "undefined") {
-//         window.scrollBy(0, 1);
-//         setTimeout(pageScrollDown, 10);
-//     }
-// }
-// function pageScrollUp() {
-//     if (typeof window !== "undefined") {
-//         window.scrollBy(0, -1);
-//         setTimeout(pageScrollUp, 10);
-//     }
-// }
-
-
 function getWindowSize(){
 
     if (typeof window !== "undefined"){
@@ -90,7 +76,7 @@ function getWindowSize(){
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 9;  // 1440 x ~~~~
             case 1080 : return 5;   // 1080 x ~~~~
-            default: return 4;
+            default: return 3;
         }
     }
 }
