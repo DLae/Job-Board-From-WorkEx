@@ -15,7 +15,8 @@ const MainPage = (props) => {
 
             const fetchData = async (centreLocation) => {
                 try {
-                    //const response = await axios.get('https://findajob.dwp.gov.uk/api/search?api_id=digital-dwp&api_key=58195e2730404c9b8809386a62f669f6&w='+centreLocation);
+
+                    //const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ props.fajID + "&api_key="+ props.fajKey +"&w="+centreLocation);
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
 
@@ -156,17 +157,28 @@ function tableCreate2(responseData){
                 </main>
             </div>
         </body>
-
-
     )
 }
 
 
 export const getServerSideProps= async () => {
+
+    const findAJobID = process.env.API_ID;
+    const findAJobKey = process.env.FIND_A_JOB_KEY;
     const userLocation = process.env.USERLOCATIONKEY;
     const defaultLocation = process.env.DEFAULTLOCATIONKEY;
-    return {props: {userLoc:userLocation,
-            defaultLoc:defaultLocation} }
+
+    // const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id=digital-dwp&api_key=58195e2730404c9b8809386a62f669f6&w=Leeds");
+    // const responseData = response.data
+
+    return {
+        props: {
+            userLoc: userLocation,
+            defaultLoc: defaultLocation
+            //fajID: findAJobID,
+            //fajKey: findAJobKey
+        }
+    }
 }
 
 export default MainPage
