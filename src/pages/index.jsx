@@ -6,18 +6,16 @@ import axios from "axios";
 import QRCode from "qrcode"
 import dotenv from 'dotenv'
 
-const MainPage = () => {
+const MainPage = (props) => {
     const [jobs, setJobs] = useState(null)
     const [shortendUrl, setShortenedUrl] = useState(null)
 
     useEffect(() => {
+        dotenv.config();
 
-        const userLocation = process.env.userLocationKey
-        const defaultLocation = process.env.defaultLocationKey
-        console.log(userLocation)
-        console.log(defaultLocation)
             const fetchData = async (centreLocation) => {
                 try {
+                    //const response = await axios.get('https://findajob.dwp.gov.uk/api/search?api_id=digital-dwp&api_key=58195e2730404c9b8809386a62f669f6&w='+centreLocation);
                     const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
                     const qrCodeSize = 180;
 
@@ -40,12 +38,12 @@ const MainPage = () => {
             const fetchLocationData = () => {
                 try {
                     navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey=3200759bbd644f979309769b8cd6cc8e");
+                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey="+ props.userLoc);
                         let jobCentreLocation = locationInfo.data.features[0].properties.postcode;
                         await fetchData(jobCentreLocation);
 
                     }, async function (){
-                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey=8a79dd396285413c983d6b17f935f176");
+                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey="+ props.defaultLoc);
                         let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
                         await fetchData(defaultPostcode)
                     })
@@ -175,6 +173,14 @@ function tableCreate2(responseData){
 
 
     )
+}
+
+
+export const getServerSideProps= async () => {
+    const userLocation = process.env.USERLOCATIONKEY;
+    const defaultLocation = process.env.DEFAULTLOCATIONKEY;
+    return {props: {userLoc:userLocation,
+            defaultLoc:defaultLocation} }
 }
 
 export default MainPage
