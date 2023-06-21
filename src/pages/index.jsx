@@ -10,17 +10,20 @@ const MainPage = (props) => {
     const [jobs, setJobs] = useState(null)
     const [shortendUrl, setShortenedUrl] = useState(null)
 
+
     useEffect(() => {
         dotenv.config();
 
-            const fetchData = async (centreLocation) => {
+            const fetchData = async (centreLocation, actualResponse) => {
                 try {
-                    console.log(props.jobData)
+
                     //const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ props.fajID + "&api_key="+ props.fajKey +"&w="+centreLocation);
-                    const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
+                    //const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
+                    const response = await actualResponse;
+                    console.log(response)
                     const qrCodeSize = 180;
 
-                    const jobsWithQrCodes = await Promise.all(response.data.map(async (job) => {
+                    const jobsWithQrCodes = await Promise.all(response.map(async (job) => {
 
                         const newJobLink = "https://uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
                         const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
@@ -38,15 +41,16 @@ const MainPage = (props) => {
 
             const fetchLocationData = () => {
                 try {
+                    const newAPIResponse = props.jobData.jobs
                     navigator.geolocation.getCurrentPosition(async function (location) {
                         const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey="+ props.userLoc);
                         let jobCentreLocation = locationInfo.data.features[0].properties.postcode;
-                        await fetchData(jobCentreLocation);
+                        await fetchData(jobCentreLocation, newAPIResponse);
 
                     }, async function (){
                         const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey="+ props.defaultLoc);
                         let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
-                        await fetchData(defaultPostcode)
+                        await fetchData(defaultPostcode, newAPIResponse)
                     })
                 }
                 catch (error){
@@ -95,24 +99,46 @@ function tableCreate2(responseData){
 
         let jobItem = responseData[i];
 
+        let jobSalary = jobItem.salary;
+        if (jobSalary === ""){
+            jobSalary = "Unable To Retrieve"
+        }
+
         const dataRow = <Table className={"govuk-table"} >
 
             <Table.Row>
                 <Table.CellHeader className={"govuk-!-text-align-centre"}>
                     {jobItem.title}
                 </Table.CellHeader>
+
+                {/*<Table.Cell className={"govuk-!-text-align-centre"}>*/}
+                {/*    <p className="govuk-body">{jobItem.description.substring(0,350) + "... Scan the QR Code for more information"}</p>*/}
+                {/*</Table.Cell>*/}
+
                 <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.summary.substring(0,350) + "... Scan the QR Code for more information"}</p>
+                    <p className="govuk-body">{jobSalary}</p>
                 </Table.Cell>
+
                 <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.company}</p>
                 </Table.Cell>
+
                 <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.location.location}</p>
+                    <p className="govuk-body">{jobItem.contract_type}</p>
                 </Table.Cell>
-                <Table.Cell>
+
+                <Table.Cell className={"govuk-!-text-align-centre"}>
+                    <p className="govuk-body">{jobItem.contract_time}</p>
+                </Table.Cell>
+
+                <Table.Cell className={"govuk-!-text-align-centre"}>
+                    <p className="govuk-body">{jobItem.location}</p>
+                </Table.Cell>
+
+                <Table.Cell className={"govuk-!-text-align-centre"}>
                     <img src = {jobItem.qrCode}/>
                 </Table.Cell>
+
             </Table.Row>
         </Table>
         jobs.push(dataRow)
@@ -169,13 +195,13 @@ export const getServerSideProps= async () => {
     const defaultLocation = process.env.DEFAULTLOCATIONKEY;
 
     const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
-    const responseData = response.data
+    const responseJobData = response.data;
 
     return {
         props: {
             userLoc: userLocation,
             defaultLoc: defaultLocation,
-            jobData:responseData
+            jobData:responseJobData
         }
     }
 }

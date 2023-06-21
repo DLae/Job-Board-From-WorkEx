@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "(heroku config:pull -f .env) & (export NODE_TLS_REJECT_UNAUTHORIZED=0) & next dev",
+    "dev": "(heroku config:pull -f .env) & next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
