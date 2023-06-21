@@ -25,7 +25,7 @@ const MainPage = (props) => {
 
                     const jobsWithQrCodes = await Promise.all(response.map(async (job) => {
 
-                        const newJobLink = "https://uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.link
+                        const newJobLink = "https://uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.url
                         const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
                         return {
                             ...job,
@@ -101,7 +101,7 @@ function tableCreate2(responseData){
 
         let jobSalary = jobItem.salary;
         if (jobSalary === ""){
-            jobSalary = "Unable To Retrieve"
+            jobSalary = "Unable To Retrieve Salary"
         }
 
         const dataRow = <Table className={"govuk-table"} >
@@ -111,9 +111,9 @@ function tableCreate2(responseData){
                     {jobItem.title}
                 </Table.CellHeader>
 
-                {/*<Table.Cell className={"govuk-!-text-align-centre"}>*/}
-                {/*    <p className="govuk-body">{jobItem.description.substring(0,350) + "... Scan the QR Code for more information"}</p>*/}
-                {/*</Table.Cell>*/}
+                <Table.Cell className={"govuk-!-text-align-centre"}>
+                    <p className="govuk-body">{jobItem.description.substring(0,350) + "... Scan the QR Code for more information"}</p>
+                </Table.Cell>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobSalary}</p>
@@ -121,14 +121,8 @@ function tableCreate2(responseData){
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.company}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
                     <p className="govuk-body">{jobItem.contract_type}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.contract_time}</p>
+                    <p className={"govuk-body"}>{jobItem.contract_time}</p>
                 </Table.Cell>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
