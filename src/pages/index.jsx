@@ -120,7 +120,7 @@ function tableCreate2(responseData){
                 </Table.Cell>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.company}</p>
+                    <strong><u>{jobItem.company}</u></strong>
                     <p className="govuk-body">{jobItem.contract_type}</p>
                     <p className={"govuk-body"}>{jobItem.contract_time}</p>
                 </Table.Cell>

@@ -109,7 +109,9 @@ td:nth-child(6){
   width: 14%
 }
 
-
+strong{
+  font-weight: 900;
+}
 
 caption{
   font-size: x-large;
