@@ -112,6 +112,18 @@ td:nth-child(6){
 strong{
   font-weight: 900;
 }
+span{
+  font-size: 30px;
+  font-weight: 600;
+}
+button{
+  display: inline-flex;
+  align-items: center;
+}
+input{
+  display: inline-flex;
+  align-items: center;
+}
 
 caption{
   font-size: x-large;

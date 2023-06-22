@@ -154,19 +154,22 @@ function tableCreate2(responseData){
             <header className="govuk-header " role="banner" data-module="govuk-header">
                 <div className="govuk-header__container govuk-width-container">
                     <div className="govuk-header__logo">
-                        <a href="/" className="govuk-header__link govuk-header__link--homepage">
-              <span className="govuk-header__logotype">
-
-                  <span className="govuk-header__logotype-text">
-                  Job Board
-                </span>
-              </span>
-                        </a>
+                      <span className="govuk-header__logotype">
+                          <span className="govuk-header__logotype-text">
+                          Job Board
+                        </span>
+                      </span>
                     </div>
+                    {/*<div>*/}
+                    {/*    <span className={"govuk-header__content"}>*/}
+                    {/*        <input className={"govuk-input govuk-input--width-5"}></input>*/}
+                    {/*        <button className="govuk-button" data-module="govuk-button">*/}
+                    {/*         Confirm*/}
+                    {/*        </button>*/}
+                    {/*    </span>*/}
+                    {/*</div>*/}
                 </div>
             </header>
-
-
 
             <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
                 <main className="govuk-main-wrapper " id="main-content" role="main">
