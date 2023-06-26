@@ -5,22 +5,20 @@ import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
 import dotenv from 'dotenv'
+import async from "async";
+import {log} from "qrcode/lib/core/galois-field";
+import {Input} from "govuk-react";
 
 const MainPage = (props) => {
     const [jobs, setJobs] = useState(null)
     const [shortendUrl, setShortenedUrl] = useState(null)
 
-
     useEffect(() => {
         dotenv.config();
 
-            const fetchData = async (centreLocation, actualResponse) => {
+            const fetchData = async () => {
                 try {
-
-                    //const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ props.fajID + "&api_key="+ props.fajKey +"&w="+centreLocation);
-                    //const response = await axios.get('https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location='+centreLocation+'&keywords=%25*');
-                    const response = await actualResponse;
-                    console.log(response)
+                    const response = await props.jobData.jobs;
                     const qrCodeSize = 180;
 
                     const jobsWithQrCodes = await Promise.all(response.map(async (job) => {
@@ -38,28 +36,7 @@ const MainPage = (props) => {
                     console.error(error.message)
                 }
             }
-
-            const fetchLocationData = () => {
-                try {
-                    const newAPIResponse = props.jobData.jobs
-                    navigator.geolocation.getCurrentPosition(async function (location) {
-                        const locationInfo = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=" + location.coords.latitude + "&lon=" + location.coords.longitude + "&apiKey="+ props.userLoc);
-                        let jobCentreLocation = locationInfo.data.features[0].properties.postcode;
-                        await fetchData(jobCentreLocation, newAPIResponse);
-
-                    }, async function (){
-                        const locationInfoDefault = await axios.get("https://api.geoapify.com/v1/geocode/reverse?lat=53.800571&lon=-1.545053&apiKey="+ props.defaultLoc);
-                        let defaultPostcode = locationInfoDefault.data.features[0].properties.postcode;
-                        await fetchData(defaultPostcode, newAPIResponse)
-                    })
-                }
-                catch (error){
-                    console.error(error.message)
-                }
-            }
-
-            fetchLocationData();
-
+            fetchData()
         }
 
     , []);
@@ -80,13 +57,25 @@ function getWindowSize(){
             case 2560 : return 5;   // 2560 x ~~~~
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 9;  // 1440 x ~~~~
-            case 1080 : return 5;   // 1080 x ~~~~
+            case 1080 : return 6;   // 1080 x ~~~~
             default: return 3;
         }
     }
 }
 
+
 function tableCreate2(responseData){
+
+    const [postcode, setPostcode] = useState(null)
+
+    const getInputPostcode = (e) => {
+        console.log(postcode)
+    }
+
+    const handleChange = (event) => {
+        setPostcode(event.target.value);
+    }
+
 
     let size = getWindowSize()
 
@@ -104,15 +93,14 @@ function tableCreate2(responseData){
             jobSalary = "Unable To Retrieve Salary"
         }
 
-        const dataRow = <Table className={"govuk-table"} >
-
-            <Table.Row>
+        const dataRow =
+            <Table.Row key={i}>
                 <Table.CellHeader className={"govuk-!-text-align-centre"}>
                     {jobItem.title}
                 </Table.CellHeader>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.description.substring(0,350) + "... Scan the QR Code for more information"}</p>
+                    <p className="govuk-body">{jobItem.description.substring(0,175) + "... Scan the QR Code for more information"}</p>
                 </Table.Cell>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
@@ -134,9 +122,8 @@ function tableCreate2(responseData){
                 </Table.Cell>
 
             </Table.Row>
-        </Table>
-        jobs.push(dataRow)
 
+        jobs.push(dataRow)
 
     }
 
@@ -145,7 +132,7 @@ function tableCreate2(responseData){
 
     return (
 
-        <body className="govuk-template__body ">
+        <div className="govuk-template__body ">
             <script>
                 document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' :
                 'js-enabled');
@@ -160,26 +147,27 @@ function tableCreate2(responseData){
                         </span>
                       </span>
                     </div>
-                    {/*<div>*/}
-                    {/*    <span className={"govuk-header__content"}>*/}
-                    {/*        <input className={"govuk-input govuk-input--width-5"}></input>*/}
-                    {/*        <button className="govuk-button" data-module="govuk-button">*/}
-                    {/*         Confirm*/}
-                    {/*        </button>*/}
-                    {/*    </span>*/}
-                    {/*</div>*/}
+                    <div>
+                        <span className={"govuk-header__content"}>
+                            <input className={"govuk-input govuk-input--width-5"} id={"postcodeInput"} onChange={handleChange}></input>
+                            <button className="govuk-button" data-module="govuk-button" id={"confirmPostcodeButton"} type={"button"} onClick={(e) => getInputPostcode(e)}>
+                             Confirm Postcode
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </header>
 
             <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
                 <main className="govuk-main-wrapper " id="main-content" role="main">
-                    <table className={"govuk-table"}>
-                        <caption>This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)</caption>
+                    <h2>This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)</h2>
+                    <Table className={"govuk-table"} >
+
                         {jobs}
-                    </table>
+                    </Table>
                 </main>
             </div>
-        </body>
+        </div>
     )
 }
 

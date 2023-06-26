@@ -116,13 +116,13 @@ span{
   font-size: 30px;
   font-weight: 600;
 }
-button{
-  display: inline-flex;
-  align-items: center;
+
+h2{
+  text-align: center;
 }
+
 input{
-  display: inline-flex;
-  align-items: center;
+  line-height: inherit;
 }
 
 caption{
