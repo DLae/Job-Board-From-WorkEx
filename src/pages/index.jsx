@@ -72,14 +72,14 @@ function tableCreate2(responseData){
     const getInputPostcode = (e) => {
         if (typeof window !== "undefined") {
             if (postcode !== null) {
-                const urlWithPostcode = "http://localhost:3001/?postcode="
-                //const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+                //const urlWithPostcode = "http://localhost:3001/?postcode="
+                const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
                 window.location.replace(urlWithPostcode + postcode.replace(/ /g, ''))
                 getServerSideProps(postcode).then(r => tableCreate2())
             }
             else{
-                const urlWithNoPostcode = "http://localhost:3001/?postcode="
-                //const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+                //const urlWithNoPostcode = "http://localhost:3001/?postcode="
+                const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
                 window.location.replace(urlWithNoPostcode)
             }
         }
@@ -173,7 +173,6 @@ function tableCreate2(responseData){
 
             <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
                 <main className="govuk-main-wrapper " id="main-content" role="main">
-                    <h2>This is a test for a digital Job Board made by Josh Bhogal (I'm a T-Level student, Feedback is appreciated)</h2>
                     <Table className={"govuk-table"} >
 
                         {jobs}
@@ -194,11 +193,13 @@ export const getServerSideProps= async (context) => {
 
     let response;
 
-    if (context.query.postcode === undefined){
-        response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
-    }
-    else{
-        response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode);
+    switch (context.query.postcode){
+        case undefined: response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+            break;
+        case "": response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+            break;
+        default: response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode);
+            break;
     }
 
     const responseJobData = response.data;
