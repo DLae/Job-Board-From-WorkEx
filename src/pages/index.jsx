@@ -10,6 +10,7 @@ import {log} from "qrcode/lib/core/galois-field";
 import {Input} from "govuk-react";
 
 const MainPage = (props) => {
+
     const [jobs, setJobs] = useState(null)
     const [shortendUrl, setShortenedUrl] = useState(null)
 
@@ -69,13 +70,25 @@ function tableCreate2(responseData){
     const [postcode, setPostcode] = useState(null)
 
     const getInputPostcode = (e) => {
-        console.log(postcode)
+        if (typeof window !== "undefined") {
+            if (postcode !== null) {
+                const urlWithPostcode = "http://localhost:3001/?postcode="
+                //const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+                window.location.replace(urlWithPostcode + postcode.replace(/ /g, ''))
+                getServerSideProps(postcode).then(r => tableCreate2())
+            }
+            else{
+                const urlWithNoPostcode = "http://localhost:3001/?postcode="
+                //const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+                window.location.replace(urlWithNoPostcode)
+            }
+        }
+
     }
 
     const handleChange = (event) => {
         setPostcode(event.target.value);
     }
-
 
     let size = getWindowSize()
 
@@ -172,14 +185,22 @@ function tableCreate2(responseData){
 }
 
 
-export const getServerSideProps= async () => {
+export const getServerSideProps= async (context) => {
 
     const findAJobID = process.env.API_ID;
     const findAJobKey = process.env.FIND_A_JOB_KEY;
     const userLocation = process.env.USERLOCATIONKEY;
     const defaultLocation = process.env.DEFAULTLOCATIONKEY;
 
-    const response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+    let response;
+
+    if (context.query.postcode === undefined){
+        response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+    }
+    else{
+        response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode);
+    }
+
     const responseJobData = response.data;
 
     return {
