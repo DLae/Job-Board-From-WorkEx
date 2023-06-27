@@ -78,12 +78,11 @@ function tableCreate2(responseData){
                 getServerSideProps(postcode).then(r => tableCreate2())
             }
             else{
-                //const urlWithNoPostcode = "http://localhost:3001/?postcode="
-                const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+                //const urlWithNoPostcode = "http://localhost:3001/"
+                const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/"
                 window.location.replace(urlWithNoPostcode)
             }
         }
-
     }
 
     const handleChange = (event) => {
