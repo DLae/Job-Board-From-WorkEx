@@ -5,14 +5,11 @@ import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
 import dotenv from 'dotenv'
-import async from "async";
-import {log} from "qrcode/lib/core/galois-field";
-import {Input} from "govuk-react";
 
 const MainPage = (props) => {
 
     const [jobs, setJobs] = useState(null)
-    const [shortendUrl, setShortenedUrl] = useState(null)
+    const [shortenedUrl, setShortenedUrl] = useState(null)
 
     useEffect(() => {
         dotenv.config();
@@ -52,42 +49,44 @@ function getWindowSize(){
 
     if (typeof window !== "undefined"){
         const windowWidth = window.innerWidth
-        const windowHeight = window.innerHeight
-        // 1633 x 910 comfortably fits 4 jobs no problem
+
         switch (windowWidth){
             case 2560 : return 5;   // 2560 x ~~~~
             case 1920 : return 3;   // 1920 x ~~~~
-            case 1440 : return 9;  // 1440 x ~~~~
+            case 1440 : return 11;  // 1440 x ~~~~
             case 1080 : return 6;   // 1080 x ~~~~
             default: return 3;
         }
     }
 }
 
+const capitaliseFirst = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 function tableCreate2(responseData){
 
-    const [postcode, setPostcode] = useState(null)
-
-    const getInputPostcode = (e) => {
-        if (typeof window !== "undefined") {
-            if (postcode !== null) {
-                //const urlWithPostcode = "http://localhost:3001/?postcode="
-                const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
-                window.location.replace(urlWithPostcode + postcode.replace(/ /g, ''))
-                getServerSideProps(postcode).then(r => tableCreate2())
-            }
-            else{
-                //const urlWithNoPostcode = "http://localhost:3001/"
-                const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/"
-                window.location.replace(urlWithNoPostcode)
-            }
-        }
-    }
-
-    const handleChange = (event) => {
-        setPostcode(event.target.value);
-    }
+    // const [postcode, setPostcode] = useState(null)
+    //
+    // const getInputPostcode = () => {
+    //     if (typeof window !== "undefined") {
+    //         if (postcode !== null) {
+    //             const urlWithPostcode = "http://localhost:3001/?postcode="
+    //             //const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
+    //             window.location.replace(urlWithPostcode + postcode.replace(/ /g, ''))
+    //             getServerSideProps(postcode).then(tableCreate2())
+    //         }
+    //         else{
+    //             const urlWithNoPostcode = "http://localhost:3001/"
+    //             //const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/"
+    //             window.location.replace(urlWithNoPostcode)
+    //         }
+    //     }
+    // }
+    //
+    // const handleChange = (event) => {
+    //     setPostcode(event.target.value);
+    // }
 
     let size = getWindowSize()
 
@@ -121,8 +120,8 @@ function tableCreate2(responseData){
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
                     <strong><u>{jobItem.company}</u></strong>
-                    <p className="govuk-body">{jobItem.contract_type}</p>
-                    <p className={"govuk-body"}>{jobItem.contract_time}</p>
+                    <p className="govuk-body">{capitaliseFirst(jobItem.contract_type)}</p>
+                    <p className={"govuk-body"}>{capitaliseFirst((jobItem.contract_time).replace("_", " "))}</p>
                 </Table.Cell>
 
                 <Table.Cell className={"govuk-!-text-align-centre"}>
@@ -155,17 +154,12 @@ function tableCreate2(responseData){
                     <div className="govuk-header__logo">
                       <span className="govuk-header__logotype">
                           <span className="govuk-header__logotype-text">
-                          Job Board
+                          Find A Job
                         </span>
                       </span>
                     </div>
                     <div>
-                        <span className={"govuk-header__content"}>
-                            <input className={"govuk-input govuk-input--width-5"} id={"postcodeInput"} onChange={handleChange}></input>
-                            <button className="govuk-button" data-module="govuk-button" id={"confirmPostcodeButton"} type={"button"} onClick={(e) => getInputPostcode(e)}>
-                             Confirm Postcode
-                            </button>
-                        </span>
+
                     </div>
                 </div>
             </header>
@@ -173,7 +167,6 @@ function tableCreate2(responseData){
             <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
                 <main className="govuk-main-wrapper " id="main-content" role="main">
                     <Table className={"govuk-table"} >
-
                         {jobs}
                     </Table>
                 </main>
