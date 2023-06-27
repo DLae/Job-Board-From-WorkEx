@@ -192,16 +192,27 @@ export const getServerSideProps= async (context) => {
     const defaultLocation = process.env.DEFAULTLOCATIONKEY;
 
     let response;
+    let responseLink;
 
     switch (context.query.postcode){
-        case undefined: response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+        case undefined: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
             break;
-        case "": response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds");
+        case "": responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
             break;
-        default: response = await axios.get("https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode);
+        default: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode+"&d=5"
             break;
     }
 
+    switch (context.query.sector){
+        case undefined: responseLink;
+            break;
+        case "": responseLink;
+            break;
+        default: responseLink += "&q=" + context.query.sector;
+            break
+    }
+
+    response = await axios.get(responseLink)
     const responseJobData = response.data;
 
     return {

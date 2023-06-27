@@ -20,6 +20,7 @@
     "govuk-frontend": "^4.6.0",
     "govuk-react": "^0.10.5",
     "next": "13.4.3",
+    "postcode-validator": "^3.8.11",
     "qrcode": "^1.5.3",
     "react": "18.2.0",
     "react-do": "^1.1.6",
