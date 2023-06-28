@@ -55,7 +55,7 @@ function getWindowSize(){
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 11;  // 1440 x ~~~~
             case 1080 : return 6;   // 1080 x ~~~~
-            default: return 3;
+            default: return 4;
         }
     }
 }
@@ -171,7 +171,7 @@ function tableCreate2(responseData){
                       </span>
                     </div>
                     <div>
-
+                        {/*<header>To search for a postcode, type "/?postcode=" into the search bar<br></br>To search for a certain job sector, type "/?sector=" into the search bar<br></br>To search for both, type "/?postcode=[enter postcode]&sector=[enter sector]" </header>*/}
                     </div>
                 </div>
             </header>
