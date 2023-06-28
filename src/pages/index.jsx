@@ -55,7 +55,7 @@ function getWindowSize(){
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 11;  // 1440 x ~~~~
             case 1080 : return 6;   // 1080 x ~~~~
-            default: return 4;
+            default: return 5;
         }
     }
 }
