@@ -85,6 +85,9 @@ body {
   overflow-x: hidden;
 }
 
+#mainTable{
+  padding-right: 65px !important;
+}
 
 caption{
   font-size: 30px;

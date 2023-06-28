@@ -95,47 +95,59 @@ function tableCreate2(responseData){
         return "";
     }
 
-    for (let i = 0; i < size; i++){
+    if (typeof window !== "undefined") {
+        console.log(window.visualViewport.width < window.innerWidth)
+        console.log(document.body.clientHeight > window.innerHeight)
 
-        let jobItem = responseData[i];
+        for (let i = 0; i < size; i++) {
 
-        let jobSalary = jobItem.salary;
-        if (jobSalary === ""){
-            jobSalary = "Unable To Retrieve Salary"
+            let jobItem = responseData[i];
+
+            let jobSalary = jobItem.salary;
+            if (jobSalary === "") {
+                jobSalary = "Unable To Retrieve Salary"
+            }
+
+            const dataRow =
+                <Table.Row key={i}>
+                    <Table.CellHeader className={"govuk-!-text-align-centre"}>
+                        {jobItem.title}
+                    </Table.CellHeader>
+
+                    <Table.Cell className={"govuk-!-text-align-centre"}>
+                        <p className="govuk-body">{jobItem.description.substring(0, 175) + "... Scan the QR Code for more information"}</p>
+                    </Table.Cell>
+
+                    <Table.Cell className={"govuk-!-text-align-centre"}>
+                        <p className="govuk-body">{jobSalary}</p>
+                    </Table.Cell>
+
+                    <Table.Cell className={"govuk-!-text-align-centre"}>
+                        <strong><u>{jobItem.company}</u></strong>
+                        <p className="govuk-body">{capitaliseFirst(jobItem.contract_type)}</p>
+                        <p className={"govuk-body"}>{capitaliseFirst((jobItem.contract_time).replace("_", " "))}</p>
+                    </Table.Cell>
+
+                    <Table.Cell className={"govuk-!-text-align-centre"}>
+                        <p className="govuk-body">{jobItem.location}</p>
+                    </Table.Cell>
+
+                    <Table.Cell className={"govuk-!-text-align-centre"}>
+                        <img src={jobItem.qrCode} alt={""}/>
+                    </Table.Cell>
+
+                </Table.Row>
+
+            if (!(window.visualViewport.height < window.innerHeight)) {
+                jobs.push(dataRow)
+            }
+            else if(document.body.clientHeight > window.innerHeight){
+                jobs.push(dataRow)
+            }
+            else{
+                break;
+            }
         }
-
-        const dataRow =
-            <Table.Row key={i}>
-                <Table.CellHeader className={"govuk-!-text-align-centre"}>
-                    {jobItem.title}
-                </Table.CellHeader>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.description.substring(0,175) + "... Scan the QR Code for more information"}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobSalary}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <strong><u>{jobItem.company}</u></strong>
-                    <p className="govuk-body">{capitaliseFirst(jobItem.contract_type)}</p>
-                    <p className={"govuk-body"}>{capitaliseFirst((jobItem.contract_time).replace("_", " "))}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <p className="govuk-body">{jobItem.location}</p>
-                </Table.Cell>
-
-                <Table.Cell className={"govuk-!-text-align-centre"}>
-                    <img src = {jobItem.qrCode}/>
-                </Table.Cell>
-
-            </Table.Row>
-
-        jobs.push(dataRow)
-
     }
 
 
@@ -164,7 +176,7 @@ function tableCreate2(responseData){
                 </div>
             </header>
 
-            <div className="govuk-width-container" className={"govuk-!-padding-left-9"} >
+            <div className="govuk-width-container" className={"govuk-!-padding-left-9"} id={"mainTable"}>
                 <main className="govuk-main-wrapper " id="main-content" role="main">
                     <Table className={"govuk-table"} >
                         {jobs}
