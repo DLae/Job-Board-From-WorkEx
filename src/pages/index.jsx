@@ -110,16 +110,16 @@ function tableCreate2(responseData){
 
             const dataRow =
                 <Table.Row key={i}>
-                    <Table.CellHeader className={"govuk-!-text-align-centre"}>
+                    <Table.CellHeader className={"govuk-!-text-align-centre"} id={"jobTitles"}>
                         {jobItem.title}
                     </Table.CellHeader>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
-                        <p className="govuk-body">{jobItem.description.substring(0, 175) + "... Scan the QR Code for more information"}</p>
+                        <p className="govuk-body" id={"jobSalaries"}>{jobSalary}</p>
                     </Table.Cell>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
-                        <p className="govuk-body">{jobSalary}</p>
+                        <p className="govuk-body">{jobItem.description.substring(0, 175) + "... Scan the QR Code for more information"}</p>
                     </Table.Cell>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
@@ -165,7 +165,7 @@ function tableCreate2(responseData){
                 <div className="govuk-header__container govuk-width-container">
                     <div className="govuk-header__logo">
                       <span className="govuk-header__logotype">
-                          <span className="govuk-header__logotype-text">
+                          <span className="govuk-header__logotype-text" id={"fajTitle"}>
                           Find A Job
                         </span>
                       </span>
