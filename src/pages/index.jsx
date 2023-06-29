@@ -35,7 +35,7 @@ const MainPage = (props) => {
                 }
             }
             fetchData()
-        }
+    }
 
     , []);
     setTimeout(function (){

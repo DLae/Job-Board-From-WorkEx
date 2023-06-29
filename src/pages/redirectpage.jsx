@@ -6,10 +6,6 @@ const redirectpage = () => {
         const indexOfH = window.location.search.indexOf("h")
         const searchQuery = window.location.search.substring(indexOfH, window.location.search.length)
         window.location.replace(searchQuery)
-
-
-        console.log("1")
-
     }
 
     return null
