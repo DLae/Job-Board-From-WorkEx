@@ -85,6 +85,14 @@ body {
   overflow-x: hidden;
 }
 
+#fajTitle{
+  font-size: 35px;
+}
+
+#explanationText{
+  font-size: 20px;
+}
+
 #jobTitles{
   font-size: 25px;
 }

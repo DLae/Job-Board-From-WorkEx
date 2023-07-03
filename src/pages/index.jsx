@@ -171,7 +171,7 @@ function tableCreate2(responseData){
                       </span>
                     </div>
                     <div>
-                        {/*<header>To search for a postcode, type "/?postcode=" into the search bar<br></br>To search for a certain job sector, type "/?sector=" into the search bar<br></br>To search for both, type "/?postcode=[enter postcode]&sector=[enter sector]" </header>*/}
+                        <header id={"explanationText"}>To scan a QR Code, First try your phone camera<br></br>If your camera doesnt work, Search for QR Reader in your app store</header>
                     </div>
                 </div>
             </header>
