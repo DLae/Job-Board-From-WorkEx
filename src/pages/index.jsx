@@ -166,12 +166,12 @@ function tableCreate2(responseData){
                     <div className="govuk-header__logo">
                       <span className="govuk-header__logotype">
                           <span className="govuk-header__logotype-text" id={"fajTitle"}>
-                          Find A Job
+                          Find a job
                         </span>
                       </span>
                     </div>
                     <div>
-                        <header id={"explanationText"}>To scan a QR Code, First try your phone camera<br></br>If your camera doesnt work, Search for QR Reader in your app store</header>
+                        <header id={"explanationText"}>To scan a QR code, first try your phone camera<br></br>If your camera doesn't work, search for QR reader in your app store</header>
                     </div>
                 </div>
             </header>
