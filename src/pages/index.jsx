@@ -12,11 +12,12 @@ const MainPage = (props) => {
     const [shortenedUrl, setShortenedUrl] = useState(null)
 
     useEffect(() => {
-        dotenv.config();
+            dotenv.config();
 
             const fetchData = async () => {
                 try {
-                    const response = await props.jobData.jobs;
+                    const response = await props.jobData;
+                    console.log(response)
                     const qrCodeSize = 180;
 
                     const jobsWithQrCodes = await Promise.all(response.map(async (job) => {
@@ -35,14 +36,14 @@ const MainPage = (props) => {
                 }
             }
             fetchData()
-    }
+        }
 
-    , []);
+        , []);
     setTimeout(function (){
         location.reload()
         return (tableCreate2(jobs))
     }, 600000)
-   return (tableCreate2(jobs))
+    return (tableCreate2(jobs))
 }
 
 function getWindowSize(){
@@ -55,38 +56,16 @@ function getWindowSize(){
             case 1920 : return 3;   // 1920 x ~~~~
             case 1440 : return 11;  // 1440 x ~~~~
             case 1080 : return 6;   // 1080 x ~~~~
-            default: return 5;
+            default: return 7;
         }
     }
 }
 
 const capitaliseFirst = str => {
     return str.charAt(0).toUpperCase() + str.slice(1);
-};
+}
 
 function tableCreate2(responseData){
-
-    // const [postcode, setPostcode] = useState(null)
-    //
-    // const getInputPostcode = () => {
-    //     if (typeof window !== "undefined") {
-    //         if (postcode !== null) {
-    //             const urlWithPostcode = "http://localhost:3001/?postcode="
-    //             //const urlWithPostcode = "https://uc-job-screen-prototype.herokuapp.com/?postcode="
-    //             window.location.replace(urlWithPostcode + postcode.replace(/ /g, ''))
-    //             getServerSideProps(postcode).then(tableCreate2())
-    //         }
-    //         else{
-    //             const urlWithNoPostcode = "http://localhost:3001/"
-    //             //const urlWithNoPostcode = "https://uc-job-screen-prototype.herokuapp.com/"
-    //             window.location.replace(urlWithNoPostcode)
-    //         }
-    //     }
-    // }
-    //
-    // const handleChange = (event) => {
-    //     setPostcode(event.target.value);
-    // }
 
     let size = getWindowSize()
 
@@ -115,21 +94,15 @@ function tableCreate2(responseData){
                     </Table.CellHeader>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
-                        <p className="govuk-body" id={"jobSalaries"}>{jobSalary}</p>
-                    </Table.Cell>
-
-                    <Table.Cell className={"govuk-!-text-align-centre"}>
-                        <p className="govuk-body">{jobItem.description.substring(0, 175) + "... Scan the QR Code for more information"}</p>
+                        <p className="govuk-body">{jobItem.summary.substring(0, 175) + "... Scan the QR Code for more information"}</p>
                     </Table.Cell>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
                         <strong><u>{jobItem.company}</u></strong>
-                        <p className="govuk-body">{capitaliseFirst(jobItem.contract_type)}</p>
-                        <p className={"govuk-body"}>{capitaliseFirst((jobItem.contract_time).replace("_", " "))}</p>
                     </Table.Cell>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
-                        <p className="govuk-body">{jobItem.location}</p>
+                        <p className="govuk-body">{jobItem.location.location}</p>
                     </Table.Cell>
 
                     <Table.Cell className={"govuk-!-text-align-centre"}>
@@ -160,7 +133,6 @@ function tableCreate2(responseData){
                 document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' :
                 'js-enabled');
             </script>
-            <a href="#main-content" className="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
             <header className="govuk-header " role="banner" data-module="govuk-header">
                 <div className="govuk-header__container govuk-width-container">
                     <div className="govuk-header__logo">
@@ -190,20 +162,15 @@ function tableCreate2(responseData){
 
 export const getServerSideProps= async (context) => {
 
-    const findAJobID = process.env.API_ID;
-    const findAJobKey = process.env.FIND_A_JOB_KEY;
-    const userLocation = process.env.USERLOCATIONKEY;
-    const defaultLocation = process.env.DEFAULTLOCATIONKEY;
-
     let response;
     let responseLink;
 
     switch (context.query.postcode){
-        case undefined: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
+        case undefined: responseLink = "https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=*%25";
             break;
-        case "": responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
+        case "": responseLink = "https://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location=Leeds&keywords=*%25"
             break;
-        default: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode+"&d=5"
+        default: responseLink = "http://api.lmiforall.org.uk/api/v1/vacancies/search?limit=6&radius=5&location="+ context.query.postcode +"&keywords=*%25"
             break;
     }
 
@@ -212,7 +179,7 @@ export const getServerSideProps= async (context) => {
             break;
         case "": responseLink;
             break;
-        default: responseLink += "&q=" + context.query.sector;
+        default: responseLink = responseLink.replace("*%25", context.query.sector+"25");
             break
     }
 
@@ -221,8 +188,6 @@ export const getServerSideProps= async (context) => {
 
     return {
         props: {
-            userLoc: userLocation,
-            defaultLoc: defaultLocation,
             jobData:responseJobData
         }
     }
