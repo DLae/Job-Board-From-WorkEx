@@ -5,12 +5,67 @@ import React, {useEffect, useState} from "react"
 import axios from "axios";
 import QRCode from "qrcode"
 import dotenv from 'dotenv'
+import GovUkInitialiser from './govuk-initialiser';
 
 const MainPage = (props) => {
-
     const [jobs, setJobs] = useState(null)
     const [shortenedUrl, setShortenedUrl] = useState(null)
+    const [error, setError] = useState(props.error || null)
 
+    useEffect(() => {
+        // Handle case where we have an error from the server-side
+        if (props.error) {
+            console.error("Server-side error:", props.error);
+            return;
+        }
+
+        const fetchData = async () => {
+            try {
+                if (!props.jobData || !props.jobData.jobs) {
+                    throw new Error("No job data available");
+                }
+                
+                const response = props.jobData.jobs;
+                const qrCodeSize = 180;
+
+                const jobsWithQrCodes = await Promise.all(response.map(async (job) => {
+                    const newJobLink = "https://uc-job-screen-prototype.herokuapp.com/redirectpage?redirecturl=" + job.url
+                    const qrPng = await QRCode.toDataURL(newJobLink, {width:qrCodeSize});
+                    return {
+                        ...job,
+                        qrCode: qrPng
+                    };
+                }));
+                setJobs(jobsWithQrCodes)
+            } catch (error) {
+                console.error("Error processing job data:", error.message);
+                setError(error.message);
+            }
+        }
+        
+        fetchData();
+    }, [props.jobData, props.error]);
+
+    // Rest of your component...
+
+    // Add error display
+    if (error) {
+        return (
+            <div className="govuk-template__body">
+                <div className="govuk-width-container">
+                    <main className="govuk-main-wrapper" id="main-content" role="main">
+                        <h1 className="govuk-heading-xl">Error</h1>
+                        <p className="govuk-body">There was a problem loading job data: {error}</p>
+                        {props.errorStatus && (
+                            <p className="govuk-body">Status code: {props.errorStatus}</p>
+                        )}
+                    </main>
+                </div>
+            </div>
+        );
+    }
+
+    // Continue with your existing render logic...
     useEffect(() => {
         dotenv.config();
 
@@ -38,12 +93,21 @@ const MainPage = (props) => {
     }
 
     , []);
+
     setTimeout(function (){
         location.reload()
         return (tableCreate2(jobs))
     }, 600000)
-   return (tableCreate2(jobs))
+
+    return (
+        <>
+            {tableCreate2(jobs)}
+            <GovUkInitialiser />
+        </>
+    );
 }
+
+export default MainPage;
 
 function getWindowSize(){
 
@@ -102,6 +166,7 @@ function tableCreate2(responseData){
         for (let i = 0; i < size; i++) {
 
             let jobItem = responseData[i];
+            console.log(jobItem);
 
             let jobSalary = jobItem.salary;
             if (jobSalary === "") {
@@ -188,44 +253,70 @@ function tableCreate2(responseData){
 }
 
 
-export const getServerSideProps= async (context) => {
-
+export const getServerSideProps = async (context) => {
+  try {
+    // Load environment variables
+    require('dotenv').config();
+    
     const findAJobID = process.env.API_ID;
     const findAJobKey = process.env.FIND_A_JOB_KEY;
-    const userLocation = process.env.USERLOCATIONKEY;
-    const defaultLocation = process.env.DEFAULTLOCATIONKEY;
+    
+    if (!findAJobID || !findAJobKey) {
+      console.error('Missing API credentials');
+      throw new Error('API credentials not configured');
+    }
+    
+    // Build the API URL
+    let responseLink;
+    switch (context.query.postcode) {
+      case undefined:
+      case "":
+        responseLink = `https://findajob.dwp.gov.uk/api/search?api_id=${findAJobID}&api_key=${findAJobKey}&w=Leeds&d=5`;
+        break;
+      default:
+        responseLink = `https://findajob.dwp.gov.uk/api/search?api_id=${findAJobID}&api_key=${findAJobKey}&w=${context.query.postcode}&d=5`;
+        break;
+    }
+    
+    if (context.query.sector && context.query.sector !== "") {
+      responseLink += `&q=${context.query.sector}`;
+    }
 
     let response;
-    let responseLink;
-
-    switch (context.query.postcode){
-        case undefined: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
-            break;
-        case "": responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w=Leeds&d=5";
-            break;
-        default: responseLink = "https://findajob.dwp.gov.uk/api/search?api_id="+ findAJobID +"&api_key="+ findAJobKey +"&w="+ context.query.postcode+"&d=5"
-            break;
+    
+    // Different approaches for development vs production environments
+    if (process.env.NODE_ENV === 'development') {
+      // In development: Disable certificate validation, but with warning
+      console.warn('⚠️ SSL certificate validation is disabled in development mode');
+      response = await axios.get(responseLink, {
+        httpsAgent: new (require('https').Agent)({
+          rejectUnauthorized: false
+        })
+      });
+    } else {
+      // In production: Use standard secure request
+      response = await axios.get(responseLink);
     }
-
-    switch (context.query.sector){
-        case undefined: responseLink;
-            break;
-        case "": responseLink;
-            break;
-        default: responseLink += "&q=" + context.query.sector;
-            break
-    }
-
-    response = await axios.get(responseLink)
-    const responseJobData = response.data;
 
     return {
-        props: {
-            userLoc: userLocation,
-            defaultLoc: defaultLocation,
-            jobData:responseJobData
-        }
+      props: {
+        jobData: response.data
+      }
+    };
+  } catch (error) {
+    console.error('Error in getServerSideProps:', error.message);
+    
+    // More detailed error for certificate issues
+    if (error.message.includes('certificate')) {
+      console.error('SSL Certificate Error: This might be due to the API using an invalid or self-signed certificate.');
     }
-}
-
-export default MainPage
+    
+    return {
+      props: {
+        error: error.message,
+        errorStatus: error.response?.status || 'No status',
+        jobData: { jobs: [] }
+      }
+    };
+  }
+};

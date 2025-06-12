@@ -1,0 +1,23 @@
+// Override any GOV.UK Frontend rules that use 'start' value
+// This file should be imported after the main GOV.UK import
+
+// Override flex alignment properties that use 'start'
+[class*="govuk-"] {
+  &[style*="align-items: start"] {
+    align-items: flex-start !important;
+  }
+  
+  &[style*="justify-content: start"] {
+    justify-content: flex-start !important;
+  }
+}
+
+// Target specific GOV.UK classes that might use 'start'
+.govuk-grid-column--align-start {
+  align-self: flex-start !important;
+}
+
+// Apply to any inline styles that might be generated
+[style*="align-self: start"] {
+  align-self: flex-start !important;
+}

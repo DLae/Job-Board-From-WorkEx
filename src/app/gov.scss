@@ -1,1 +1,10 @@
-@import "node_modules/govuk-frontend/govuk/all";
+// Override default paths and settings
+$govuk-assets-path: '/assets/';
+$govuk-font-family: "GDS Transport", arial, sans-serif;
+$govuk-new-link-styles: true;
+
+// Import all GOV.UK Frontend components
+@import "govuk-frontend/dist/govuk/all";
+
+// Import our overrides to fix the 'start' value warning
+@import "./govuk-overrides";
