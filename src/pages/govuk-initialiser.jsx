@@ -7,15 +7,18 @@ export default function GovUkInitialiser() {
     const initGovUK = async () => {
       try {
         // In version 5.10.2, the path structure is different
-        // Instead of dynamic import, let's use a direct approach
         if (typeof window !== 'undefined') {
-          // Create a script element
+          // Use the IIFE version instead of the ES module version
           const script = document.createElement('script');
+          // Make sure you're using the IIFE version, not the ES module version
           script.src = '/assets/govuk-frontend.js';
+          script.type = 'text/javascript'; // Explicitly set as regular JavaScript
           script.onload = () => {
             // Once loaded, initialize all components
             if (window.GOVUKFrontend) {
               window.GOVUKFrontend.initAll();
+            } else {
+              console.error('GOVUKFrontend not available on window object');
             }
           };
           document.body.appendChild(script);
